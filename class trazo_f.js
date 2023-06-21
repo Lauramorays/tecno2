@@ -21,9 +21,9 @@ class Trazo_f {
     this.velmouse = 0;
     this.difX = 0;
     this.difY = 0;
-    this.brillo = 8;
-    this.opacidad = 9;
-    this.randomcol = random(200, 360);
+    this.brillo = 0;
+    this.opacidad = 0;
+    this.randomcol = random(50, 200);
 
      // Variables adicionales
     // this.posy_reset = random(height + 30, height + 80); // Posición Y de reinicio
@@ -35,23 +35,18 @@ class Trazo_f {
     this.velmouse = floor(this.difX + this.difY);
 
     if (this.velmouse > 20) {
-      this.dibujar();
-      this.brillo += this.velmouse / 3;
+      this.brillo += this.velmouse / 100;
+      this.opacidad += this.velmouse / 100
     } else {
-      this.brillo--;
+      this.brillo = 10;
+      this.opacidad = 10;
     }
 
-    let factorBrillo = map(this.velmouse, 0, 100, 0, 2); // Ajusta el rango de mapeo según tus necesidades
-    this.brillo = constrain(this.brillo + factorBrillo, 100, 255);
-    
-    let factorOpacidad = map(this.velmouse, 0, 100, 0, 0.04); // Ajusta el rango de mapeo según tus necesidades
-    this.opacidad = constrain(this.opacidad + factorOpacidad, 0.01, 0.05);
-    
   }
 
   saltaralprincipio_f() {
     this.posy = random(height + 30, height + 80); // Reiniciar posición Y a posy_reset
-    this.randomcol = random(200, 360);
+    this.randomcol = random(50, 200);
     this.posx_f = random(0, width);
   }
 
@@ -101,19 +96,21 @@ class Trazo_f {
   
   
   dibujar() {
+    this.darcolor();
     push();
     translate(this.posx_f, this.posy);
   
       if (this.posx_f < width / 2) {
-        this.angulo = 70; // Ángulo para las imágenes en la mitad izquierda de la pantalla
-        tint(50, this.brillo, this.opacidad);   
-        tint(255, this.brillo, this.opacidad * 255); // Ajusta el color de la imagen     
+
+        this.angulo = (radians(270)); // Ángulo para las imágenes en la mitad izquierda de la pantalla
+        tint(this.randomcol, 200, this.randomcol, this.brillo); // Ajusta el color de la imagen     
         rotate(radians(this.angulo));
         image(this.quetrazo, 0, 0, 40, 80); // Dibuja la imagen en la posición actual relativa a translate()
+
       } else {
-        this.angulo = 270; // Ángulo para las imágenes en la mitad derecha de la pantalla
-        tint(50, this.brillo, this.opacidad);    
-        tint(255, this.brillo, this.opacidad * 255); // Ajusta el color de la imagen    
+
+        this.angulo = (radians(70)); // Ángulo para las imágenes en la mitad derecha de la pantalla
+        tint(this.randomcol, this.randomcol, this.randomcol, this.brillo); // Ajusta el color de la imagen    
         rotate(radians(this.angulo));
         image(this.quetrazo, 0, 0, 40, 80); // Dibuja la imagen en la posición actual relativa a translate()
   

@@ -70,6 +70,7 @@ function setup() {
   // Crear objetos trazo_fig después de cargar las imágenes de trazos figura
   for (let j = 0; j < 10; j++) {
     let trazo_fi = new trazo_fig(mascarafigura, imgs_trazosF[j]);
+    filter(BLUR);
     tfig.push(trazo_fi);
   }
 }
