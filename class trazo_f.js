@@ -1,41 +1,32 @@
 class Trazo_f {
-  constructor(imgs_trazos) {
-    this.quetrazo = imgs_trazos;
+  constructor(quetrazo) {
+    // Resto del código...
+    this.cual = int(random(imgs_trazos.length));
+    this.posy_reset = random(height + 30, height + 80);
 
-    this.posy_reset = random(height + 30, height + 80); // Posición Y de reinicio
-
-    // Asegurarse de que el array imgs_trazos se haya cargado completamente
-    if (imgs_trazos.length > 0) {
-      // Realizar el procesamiento de las imágenes de trazos figura
-      for (let i = 0; i < imgs_trazos.length; i++) {
-        let img = imgs_trazos[i];
-        img.resize(80, 40); // Ajustar el tamaño de los trazos (aumentar el tamaño)
-      }
-    }
+    // Asignar el array imgs_trazos a this.quetrazo
+    this.quetrazo = imgs_trazos[this.cual];
 
     // Vars movimiento
     this.vel = random(5, 20);
     this.posy = random(height);
     this.posx_f = random(0, width - 50);
-    this.angulo = 90;
+    this.angulo = 0;
     this.dx = 0;
     this.dy = 0;
     this.vueltas = 0;
+    this.espacioMedio = false;
 
     // Vars cambiar color
     this.velmouse = 0;
     this.difX = 0;
     this.difY = 0;
-    this.brillo = 255;
-    this.opacidad = 0.05;
+    this.brillo = 8;
+    this.opacidad = 9;
     this.randomcol = random(200, 360);
 
      // Variables adicionales
     // this.posy_reset = random(height + 30, height + 80); // Posición Y de reinicio
-  }
-
-  agregarTrazo(img) {
-    this.quetrazo.push(img); // Agregar una imagen de trazo al array this.quetrazo
   }
 
   darcolor() {
@@ -43,48 +34,63 @@ class Trazo_f {
     this.difY = abs(mouseY - pmouseY);
     this.velmouse = floor(this.difX + this.difY);
 
-    if (this.velmouse > 80) {
+    if (this.velmouse > 20) {
       this.dibujar();
-      this.brillo += this.velmouse / 40;
+      this.brillo += this.velmouse / 3;
     } else {
       this.brillo--;
     }
 
-    this.brillo = constrain(this.brillo, 100, 255);
-    this.opacidad = constrain(this.opacidad, 0.01, 0.05);
+    let factorBrillo = map(this.velmouse, 0, 100, 0, 2); // Ajusta el rango de mapeo según tus necesidades
+    this.brillo = constrain(this.brillo + factorBrillo, 100, 255);
+    
+    let factorOpacidad = map(this.velmouse, 0, 100, 0, 0.04); // Ajusta el rango de mapeo según tus necesidades
+    this.opacidad = constrain(this.opacidad + factorOpacidad, 0.01, 0.05);
+    
   }
 
   saltaralprincipio_f() {
     this.posy = random(height + 30, height + 80); // Reiniciar posición Y a posy_reset
     this.randomcol = random(200, 360);
-    this.posx_f = random(0, width - 50);
+    this.posx_f = random(0, width);
   }
 
   movertrazo_f() {
-    if (this.posx_f > width / 2 - 100 && this.posx_f < width / 2 + 100) {
-      this.angulo = 90;
-    } else {
-      this.angulo = map(this.posy, height, 0, 35, 120);
+  
+    if (this.posx_f > width / 2 - 80 && this.posx_f < width / 2 + 80) {
+      //this.angulo = random(75, 105);
+      this.angulo = map(this.posx_f, width / 2 - 80, width / 2 + 80, 75, 105);
+      this.espacioMedio = true;
+    } else if (this.posx_f < width / 2 - 80) {
+      //this.angulo = map(this.posy, height, 0, 90, 120);
+      this.angulo = map(this.posx_f, 0, width / 2 - 75, 140, 90);
+      this.espacioMedio = false;
+    } else if (this.posx_f > width / 2 - 75) {
+      //this.angulo = map(this.posy, height, 0, 90, 120);
+      this.angulo = map(this.posx_f, width / 2 + 75, width, 90, 140);
+      this.espacioMedio = false;
     }
   
+
+
     if (this.posx_f > width / 2 - 100 && this.posx_f < width / 2 + 100 && this.posy > height / 2) {
       this.angulo = map(this.posy, height, 0, 50, 120);
     }
-  
-    this.angulo += noise(this.posy * 0.01, millis() * 0.001) * 100 - 20;
+
+      this.angulo += noise(this.posy * 0.01, millis() * 0.001) * 10 - 0;
   
     this.dx = cos(radians(this.angulo));
     this.dy = sin(radians(this.angulo));
   
     this.posy -= this.dy * this.vel;
   
-    if (this.posx_f < width / 2 || (this.posx_f < width / 2 && this.dy < height / 2)) {
+    if (this.posx_f < width / 2 - 100) {
       this.posx_f += this.dx * this.vel;
-    } else if (this.posx_f > width / 2 || (this.posx_f > width / 2 && this.dy < height / 2)) {
+    } else if (this.posx_f > width / 2 + 100) {
       this.posx_f -= this.dx * this.vel;
     }
   
-    if (this.posy < -80) {
+    if (this.posy < -80 || this.posx_f < -20 || this.posx_f > width + 20) {
       this.saltaralprincipio_f();
     }
   
@@ -94,22 +100,32 @@ class Trazo_f {
   
   
   
-
   dibujar() {
     push();
     translate(this.posx_f, this.posy);
-    rotate(radians(this.angulo + 0));
-    if (this.posx_f < width / 2) {
-      rotate(radians(this.angulo + 250));
-    }
-    let trazoIndex = frameCount % this.quetrazo.length; // Índice del trazo actual a dibujar
-    let img = this.quetrazo[trazoIndex];
-    tint(255, 30, this.brillo, this.opacidad); // Ajusta el color de la imagen
-    image(img, 20, 0); // Dibuja la imagen en la posición actual relativa a translate()
-
-    if (this.posy < -80) {
-      this.saltaralprincipio_f();
-    }
+  
+      if (this.posx_f < width / 2) {
+        this.angulo = 70; // Ángulo para las imágenes en la mitad izquierda de la pantalla
+        tint(50, this.brillo, this.opacidad);   
+        tint(255, this.brillo, this.opacidad * 255); // Ajusta el color de la imagen     
+        rotate(radians(this.angulo));
+        image(this.quetrazo, 0, 0, 40, 80); // Dibuja la imagen en la posición actual relativa a translate()
+      } else {
+        this.angulo = 270; // Ángulo para las imágenes en la mitad derecha de la pantalla
+        tint(50, this.brillo, this.opacidad);    
+        tint(255, this.brillo, this.opacidad * 255); // Ajusta el color de la imagen    
+        rotate(radians(this.angulo));
+        image(this.quetrazo, 0, 0, 40, 80); // Dibuja la imagen en la posición actual relativa a translate()
+  
+      }
+  
+      if (this.posy < -80) {
+        this.saltaralprincipio_f();
+      }
+    
+    
     pop();
   }
-}
+  
+  
+}  

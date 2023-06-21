@@ -6,18 +6,12 @@ let tfig = [];
 let mascarafigura;
 // Array de imágenes de trazos
 let imgs_trazos = [];
-// Declarar una variable global para la máscara de fondo
-//let mascarafondo;
 
-// Carga de recursos antes de iniciar el sketch
+let imgs_trazosF = [];
+
 function preload() {
   // Carga de la máscara figura
   mascarafigura = loadImage('trazos/mascara_figura3.jpg');
-
-  // Carga de la máscara de fondo
-  //mascarafondo = loadImage('trazos/trazosfondo/trazofondo_12.png');
-
-  // Resto de la carga de recursos...
 
   // URLs de las imágenes de trazos fondo
   let urls = [
@@ -37,52 +31,62 @@ function preload() {
     "trazos/trazosfondo/trazofondo_14.png"
   ];
 
-  // Carga de las imágenes de trazos figura en el array imgs_trazos
+  // Carga de las imágenes de trazos fondo en el array imgs_trazos
   for (let i = 0; i < urls.length; i++) {
-    let img = loadImage(urls[i], () => {
-      // Aplicar la máscara de fondo a la imagen de trazo
-     // img.mask(mascarafondo);
-      imgs_trazos.push(img);
-    });
+    let img = loadImage(urls[i]);
+    imgs_trazos.push(img);
+  }
+
+  // URLs de las imágenes de trazos figura
+  let urlsF = [
+    "trazos/trazosfigura/trazofigura1.png",
+    "trazos/trazosfigura/trazofigura2.png",
+    "trazos/trazosfigura/trazofigura3.png",
+    "trazos/trazosfigura/trazofigura4.png",
+    "trazos/trazosfigura/trazofigura5.png",
+    "trazos/trazosfigura/trazofigura6.png",
+    "trazos/trazosfigura/trazofigura7.png"
+  ];
+
+  // Carga de las imágenes de trazos figura en el array imgs_trazosF
+  for (let i = 0; i < urlsF.length; i++) {
+    let imgf = loadImage(urlsF[i]);
+    imgs_trazosF.push(imgf);
   }
 }
+
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
-  // Fondo
-  //trazofondo.resize(trazofondo.width / 2, trazofondo.height / 2);
-  //trazofondo.mask(mascaratfondo);
-  colorMode(HSB);
+  // Crear objetos Trazo_f después de cargar las imágenes de trazos de fondo
+  for (let i = 0; i < 20; i++) {
+    let trazo_f = new Trazo_f(imgs_trazos[i]); // Pasa el array imgs_trazos como argumento al crear los objetos
+    tfon.push(trazo_f);
+  }
+  
+  
 
-// Crear objetos Trazo_f después de cargar las imágenes de trazos de fondo
-for (let i = 0; i < 20; i++) {
-  let trazo_f = new Trazo_f(imgs_trazos);
-  tfon.push(trazo_f);
-}
-
-  // Objetos trazo_fig
+  // Crear objetos trazo_fig después de cargar las imágenes de trazos figura
   for (let j = 0; j < 10; j++) {
-    let trazo_fi = new trazo_fig(mascarafigura,imgs_trazos);
+    let trazo_fi = new trazo_fig(mascarafigura, imgs_trazosF[j]);
     tfig.push(trazo_fi);
   }
 }
 
 function draw() {
 
+  // Dibujar los trazos de fondo
   for (let i = 0; i < tfon.length; i++) {
-    push();
     tfon[i].dibujar();
     tfon[i].movertrazo_f();
     tfon[i].darcolor();
-    pop();
   }
 
+  // Dibujar los trazos de figura
   for (let j = 0; j < tfig.length; j++) {
-    push();
     tfig[j].dibujar();
     tfig[j].mover();
-    pop();
   }
 }
 
