@@ -53,11 +53,19 @@ function preload() {
     let imgf = loadImage(urlsF[i]);
     imgs_trazosF.push(imgf);
   }
+
+  let miImagenfondo;
+  let miImagentrazo;
 }
 
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+//imágenes para obtener el color de la figura y el fondo
+  miImagenfondo = loadImage('imagenes/colorfondo.jpg');
+  miImagentrazo = loadImage('imagenes/colorfigura.jpg');
+
+  miImagentrazo.resize(mascarafigura.width, mascarafigura.height);
 
   // Crear objetos Trazo_f después de cargar las imágenes de trazos de fondo
   for (let i = 0; i < 20; i++) {

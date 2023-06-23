@@ -25,23 +25,39 @@ class Trazo_f {
     this.opacidad = 0;
     this.randomcol = random(50, 200);
 
-     // Variables adicionales
+    // Variables adicionales
     // this.posy_reset = random(height + 30, height + 80); // Posición Y de reinicio
   }
+
+
+  getColorFromImage(x, y) {
+    let c = miImagenfondo.get(x, y);
+    return c;
+  }
+
 
   darcolor() {
     this.difX = abs(mouseX - pmouseX);
     this.difY = abs(mouseY - pmouseY);
     this.velmouse = floor(this.difX + this.difY);
-
+  
     if (this.velmouse > 20) {
-      this.brillo += this.velmouse / 100;
-      this.opacidad += this.velmouse / 100
+      this.brillo += this.velmouse / 50; // Aumentar el brillo más rápidamente
+      this.opacidad += this.velmouse;
     } else {
       this.brillo = 10;
       this.opacidad = 10;
     }
-
+  
+    // Obtener un color al azar de la imagen en una posición específica
+    let x = floor(random(this.quetrazo.width));
+    let y = floor(random(this.quetrazo.height));
+    let colorPixel = this.quetrazo.get(x, y);
+  
+    // Utilizar el color obtenido de la imagen
+    this.randomcol = colorPixel[0];
+    this.brillo = colorPixel[1];
+    this.opacidad = colorPixel[2];
   }
 
   saltaralprincipio_f() {
@@ -51,78 +67,114 @@ class Trazo_f {
   }
 
   movertrazo_f() {
-  
-    if (this.posx_f > width / 2 - 80 && this.posx_f < width / 2 + 80) {
+
+    if (this.posx_f > width / 2 - 90 && this.posx_f < width / 2 + 90) {
+
       //this.angulo = random(75, 105);
-      this.angulo = map(this.posx_f, width / 2 - 80, width / 2 + 80, 75, 105);
+      this.angulo = map(this.posx_f, width / 2 - 80, width / 2 + 80, 70, 110);
       this.espacioMedio = true;
-    } else if (this.posx_f < width / 2 - 80) {
+
+    } else if (this.posx_f < width / 2 + 75) {
+
       //this.angulo = map(this.posy, height, 0, 90, 120);
       this.angulo = map(this.posx_f, 0, width / 2 - 75, 140, 90);
       this.espacioMedio = false;
+
     } else if (this.posx_f > width / 2 - 75) {
+
       //this.angulo = map(this.posy, height, 0, 90, 120);
       this.angulo = map(this.posx_f, width / 2 + 75, width, 90, 140);
       this.espacioMedio = false;
     }
-  
 
+
+    // Calcula el ángulo de la imagen en función del ángulo del trazo
+    let anguloImagen = this.angulo + random(90, 200); // Puedes ajustar este valor según tus necesidades
+
+    // Calcula el ángulo de rotación de la imagen
+    let anguloRotacion = map(anguloImagen, 0, 90, 0, TWO_PI);
 
     if (this.posx_f > width / 2 - 100 && this.posx_f < width / 2 + 100 && this.posy > height / 2) {
       this.angulo = map(this.posy, height, 0, 50, 120);
     }
 
-      this.angulo += noise(this.posy * 0.01, millis() * 0.001) * 10 - 0;
-  
+
+
+
+    this.angulo += noise(this.posy * 0.01, millis() * 0.001) * 10 - 0;
+
     this.dx = cos(radians(this.angulo));
     this.dy = sin(radians(this.angulo));
-  
+
     this.posy -= this.dy * this.vel;
-  
+
     if (this.posx_f < width / 2 - 100) {
       this.posx_f += this.dx * this.vel;
     } else if (this.posx_f > width / 2 + 100) {
       this.posx_f -= this.dx * this.vel;
     }
-  
+
     if (this.posy < -80 || this.posx_f < -20 || this.posx_f > width + 20) {
       this.saltaralprincipio_f();
     }
-  
+
     // Añadir espacio medio
     this.posx_f += this.dx * this.vel * 0.1; // Ajusta el valor 0.5 según tus necesidades
   }
-  
-  
-  
+
+
+
   dibujar() {
     this.darcolor();
     push();
+
+    background(245, 0.5);
+
     translate(this.posx_f, this.posy);
-  
-      if (this.posx_f < width / 2) {
 
-        this.angulo = (radians(270)); // Ángulo para las imágenes en la mitad izquierda de la pantalla
-        tint(this.randomcol, 200, this.randomcol, this.brillo); // Ajusta el color de la imagen     
-        rotate(radians(this.angulo));
-        image(this.quetrazo, 0, 0, 40, 80); // Dibuja la imagen en la posición actual relativa a translate()
+    if (this.posx_f < width / 2) {
+      let colorPixel = this.getColorFromImage(this.posx_f, this.posy);
+      let trazoAngulo = radians(this.angulo);
+      let imgAngulo = trazoAngulo + atan2(this.dy, this.dx); // Ángulo de la imagen basado en el ángulo del trazo y su dirección
 
-      } else {
+      // Mapear el valor de brillo al rango 0-1
+      let brilloMapeado = map(colorPixel[1], 0, 255, 5, 20);
 
-        this.angulo = (radians(70)); // Ángulo para las imágenes en la mitad derecha de la pantalla
-        tint(this.randomcol, this.randomcol, this.randomcol, this.brillo); // Ajusta el color de la imagen    
-        rotate(radians(this.angulo));
-        image(this.quetrazo, 0, 0, 40, 80); // Dibuja la imagen en la posición actual relativa a translate()
-  
-      }
-  
-      if (this.posy < -80) {
-        this.saltaralprincipio_f();
-      }
-    
-    
+      fill(colorPixel[0], colorPixel[1], colorPixel[2], brilloMapeado);
+      tint(colorPixel[0], colorPixel[1], colorPixel[2], brilloMapeado);
+
+      push();
+      translate(0, 0); // Ajusta la posición de dibujo de la imagen según tus necesidades
+      rotate(this.anguloRotacion);
+      image(this.quetrazo, 0, 0, random(30, 40), random (50, 100)); // Dibuja la imagen en la posición actual relativa a translate()
+      pop();
+
+      // Resto del código...
+    } else {
+      let colorPixel = this.getColorFromImage(this.posx_f, this.posy);
+      let trazoAngulo = radians(this.angulo);
+      let imgAngulo = trazoAngulo + atan2(this.dy, this.dx); // Ángulo de la imagen basado en el ángulo del trazo y su dirección
+
+      // Mapear el valor de brillo al rango 0-1
+      let brilloMapeado = map(colorPixel[1], 0, 255, 5, 20);
+
+      fill(colorPixel[0], colorPixel[1], colorPixel[2], brilloMapeado);
+      tint(colorPixel[0], colorPixel[1], colorPixel[2], brilloMapeado);
+
+      push();
+      translate(0, 0); // Ajusta la posición de dibujo de la imagen según tus necesidades
+      rotate(this.anguloRotacion);
+      image(this.quetrazo, 0, 0, random(30, 40), random (50, 100)); // Dibuja la imagen en la posición actual relativa a translate()
+      pop();
+    }
+
+    if (this.posy < -80) {
+      this.saltaralprincipio_f();
+    }
+
     pop();
   }
-  
-  
+
+
+
 }  

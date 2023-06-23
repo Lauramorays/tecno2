@@ -6,11 +6,9 @@ class trazo_fig {
     this.cual = int(random(imgs_trazosF.length));
     this.trazo = imgs_trazosF[this.cual];
     this.mascaratrazo = loadImage('trazos/trazosfondo/trazofondo_03.png');
-    let mascaraAncho = 700;
-    let mascaraAlto = 700;
+    let mascaraAncho = 70;
+    let mascaraAlto = 150;
     this.mascaratrazo.resize(mascaraAncho, mascaraAlto);
-
-
     /* for (let i = 0; i < imgs_trazosF.length; i++) {
        let imgFig = imgs_trazosF[i];
        imgFig.resize(80, 40); // Ajustar el tamaño de los trazos (aumentar el tamaño)
@@ -25,7 +23,7 @@ class trazo_fig {
       }
     }
     //movimiento//
-    this.tam_fig = 10;
+    this.tam_fig = 100;
     this.margen_tfig = 10;
     this.posX_fig = random(this.margen_tfig, width - this.margen_tfig);
     this.posY_fig = random(this.margen_tfig, height - this.margen_tfig);
@@ -70,6 +68,11 @@ class trazo_fig {
       this.posY_fig > this.margen_tfig &&
       this.posY_fig < height - this.margen_tfig
     );
+  }
+
+  getColorFromImage(x, y) {
+    let c = miImagentrazo.get(x, y);
+    return c;
   }
 
   //funciones 
@@ -126,7 +129,15 @@ class trazo_fig {
     this.cual = int(random(this.trazo.length));
   }
 
+darColor(){
+  let x = floor(random(this.trazo.width));
+  let y = floor(random(this.trazo.height));
+  let colorPixel = this.trazo.get(x, y);
 
+  this.randomcol = colorPixel[0];
+  this.brillo = colorPixel[1];
+  this.opacidad = colorPixel[2];
+}
 
   dibujar() {
     // Dibujar el trazo en el lienzo gráfico si pertenece a la forma y no está fuera de los margenes//
@@ -148,24 +159,23 @@ class trazo_fig {
 
 
 
-      if (this.posX_fig < width / 2) {
         translate(0, 0);
         // Calcular el ángulo basado en la posición en x
+        let colorPixel = this.getColorFromImage(this.posX_fig, this.posY_fig);
         let angulo = map(this.posX_fig, 0, width / 2, 210, 270);
+        let r = red(colorPixel);
+        let g = green(colorPixel);
+        let b = blue(colorPixel);
+        let a = alpha(colorPixel);
+        let colorTint = color(r, g, b, a);
 
-        this.pgf.tint(this.color_fig);
-        rotate(radians(angulo));
-        this.pgf.image(trazoEnmascarado, this.posX_fig, this.posY_fig, 30, 40);
-      } else {
+        let transparenciaAleatoria = random(50, 200);
 
-        translate(0, 0);
-        // Calcular el ángulo basado en la posición en x
-        let angulo = map(this.posX_fig, width / 2, width, 270, 300);
-
-        this.pgf.tint(this.color_fig);
-        rotate(radians(angulo));
-        this.pgf.image(trazoEnmascarado, this.posX_fig, this.posY_fig, 30, 40);
-      }
+        let colorTrazo = color(red(colorTint), green(colorTint), blue(colorTint), transparenciaAleatoria);
+                
+        this.pgf.tint(colorTrazo);
+        rotate(radians(angulo) + random(0, 360));
+        this.pgf.image(trazoEnmascarado, this.posX_fig, this.posY_fig, random (20, 50), random(60, 120));
 
       //trazos circulos//
       //this.pgf.image(this.trazo, this.posX_fig, this.posY_fig, this.tam_fig, this.tam_fig);
