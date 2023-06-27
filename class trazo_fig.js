@@ -143,8 +143,6 @@ darColor(){
     // Dibujar el trazo en el lienzo gráfico si pertenece a la forma y no está fuera de los margenes//
     if (this.esta_en_margenes() && this.pertenece_a_la_forma()) {
       push();
-
-
       // Crea una imagen en blanco del mismo tamaño que el trazo
       let trazoEnmascarado = createImage(this.trazo.width, this.trazo.height);
 

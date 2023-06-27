@@ -1,3 +1,10 @@
+//------------------------------ CONFIGURACIÓN SONIDO ------------------------------
+
+let IMPRIMIR = true;
+
+let mic;
+let amplitud_Minima = 0.01;
+let hay_sonido = false;
 // Array de objetos Trazo_f
 let tfon = [];
 // Array de objetos trazo_fig
@@ -62,9 +69,12 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
 //imágenes para obtener el color de la figura y el fondo
+ mic = new p5.AudioIn();
+ mic.start();
+ userStartAudio();
+
   miImagenfondo = loadImage('imagenes/colorfondo.jpg');
   miImagentrazo = loadImage('imagenes/colorfigura.jpg');
-
   miImagentrazo.resize(mascarafigura.width, mascarafigura.height);
 
   // Crear objetos Trazo_f después de cargar las imágenes de trazos de fondo
@@ -72,8 +82,6 @@ function setup() {
     let trazo_f = new Trazo_f(imgs_trazos[i]); // Pasa el array imgs_trazos como argumento al crear los objetos
     tfon.push(trazo_f);
   }
-  
-  
 
   // Crear objetos trazo_fig después de cargar las imágenes de trazos figura
   for (let j = 0; j < 10; j++) {
@@ -83,20 +91,45 @@ function setup() {
   }
 }
 
-function draw() {
 
+
+function draw() {
+  let amplitud = mic.getLevel();
+  hay_sonido = amplitud > amplitud_Minima;
+  
+  fill(127);
+  stroke(0);
+  let h = map( amplitud, 0, 1, height, 0);
+  ellipse(width / 2, h - 25, 50, 50);
+  
+  if(hay_sonido){
+
+    if(IMPRIMIR){
+      let texto = "Amplitud: " + amplitud;
+      let parrafo = createP(texto);
+      parrafo.position(50, 60); // E
+
+    }
   // Dibujar los trazos de fondo
+
   for (let i = 0; i < tfon.length; i++) {
     tfon[i].dibujar();
     tfon[i].movertrazo_f();
     tfon[i].darcolor();
-  }
 
+    
+  }
   // Dibujar los trazos de figura
   for (let j = 0; j < tfig.length; j++) {
     tfig[j].dibujar();
     tfig[j].mover();
   }
+} else{
+  for (let i = 0; i < tfon.length; i++) {
+   background(255, 255,255);
+    //tfon[i].darcolor();
+  }
+}
 }
 
 function windowResized() {
