@@ -10,13 +10,11 @@ let imgs_trazosF = [];
 let mic;
 let AMP_MIN = 0.01;
 let AMP_MAX = 0.1; // Umbral de volumen para detectar sonidos fuertes
-let durationThreshold = 8; // Duración mínima del sonido en segundos
+let durationThreshold = 3; // Duración mínima del sonido en segundos
 let startTime = 0;
-let soundDetected = false;
 let sonidoMax= false;
 let sonidoMin= false;
-
-
+let estadoSonido = '';
 
 let trazoFigura;// Variable para almacenar la instancia de la clase trazo_fig
 
@@ -91,7 +89,7 @@ function setup() {
 
 }
 
-function draw() {
+/*function draw() {
   let vol = mic.getLevel();
 
   if (vol > AMP_MAX && !sonidoMax) {
@@ -100,7 +98,7 @@ function draw() {
     startTime = millis(); // Almacena el tiempo de inicio del sonido
   }
   if (vol > AMP_MIN && vol < AMP_MAX && !sonidoMin) {
-    // Sonido fuerte detectado
+    // Sonido débil detectado
     sonidoMin = true;
     startTime = millis(); // Almacena el tiempo de inicio del sonido
   }
@@ -112,7 +110,8 @@ function draw() {
       tfon[i].dibujar();
       tfon[i].movertrazo_f();
       tfon[i].darcolor();
-    }  
+    }
+
     // Dibujar los trazos de figura
     for (let j = 0; j < tfig.length; j++) {
       tfig[j].dibujar();
@@ -124,27 +123,69 @@ function draw() {
   if (sonidoMin && millis() - startTime < durationThreshold * 1000) {
     // Dibujar los trazos de fondo
     for (let i = 0; i < tfon.length; i++) {
-      push();
-     
       tfon[i].dibujar();
       tfon[i].movertrazo_f();
       tfon[i].darcolor();
-     
-      pop();
     }
-
-    
-
-    
   } else {
     // El sonido ha terminado o no cumple la duración mínima
-    pop();
-    sonidoMax = false;
+    if (millis() - startTime > durationThreshold * 1000) {
+      // Ha pasado el tiempo de silencio requerido, finaliza el dibujo
+      sonidoMax = false;
+    }
     sonidoMin = false;
-    background(255,255,255); // Color de fondo predeterminado
-   
-    push();
-    
+    background(255); // Color de fondo predeterminado
+  }
+}*/
+function draw() {
+  let vol = mic.getLevel();
+
+  if (vol > AMP_MAX && estadoSonido !== 'max') {
+    // Sonido fuerte detectado
+    estadoSonido = 'max';
+    startTime = millis(); // Almacena el tiempo de inicio del sonido
+  }
+  if (vol > AMP_MIN && vol < AMP_MAX && estadoSonido !== 'min') {
+    // Sonido débil detectado
+    estadoSonido = 'min';
+    startTime = millis(); // Almacena el tiempo de inicio del sonido
+  }
+
+  // Actualizar estado del sonido
+  if (estadoSonido === '') {
+    background(255); // No hay sonido detectado, establecer color de fondo predeterminado
+  }
+
+  //----------------------------SONIDO MAXIMO------------
+  if (estadoSonido === 'max' && millis() - startTime < durationThreshold * 1000) {
+    // Dibujar los trazos de fondo
+    for (let i = 0; i < tfon.length; i++) {
+      tfon[i].dibujar();
+      tfon[i].movertrazo_f();
+      tfon[i].darcolor();
+    }
+
+    // Dibujar los trazos de figura
+    for (let j = 0; j < tfig.length; j++) {
+      tfig[j].dibujar();
+      tfig[j].mover();
+    }
+  }
+
+  //----------------------------SONIDO MINIMO----------------------------
+  if (estadoSonido === 'min' && millis() - startTime < durationThreshold * 1000) {
+    // Dibujar los trazos de fondo
+    for (let i = 0; i < tfon.length; i++) {
+      tfon[i].dibujar();
+      tfon[i].movertrazo_f();
+      tfon[i].darcolor();
+    }
+  } else {
+    // El sonido ha terminado o no cumple la duración mínima
+    if (millis() - startTime > durationThreshold * 1000) {
+      // Ha pasado el tiempo de silencio requerido, finaliza el dibujo
+      estadoSonido = '';
+    }
   }
 }
 
