@@ -98,9 +98,6 @@ class Trazo_f {
       this.angulo = map(this.posy, height, 0, 50, 120);
     }
 
-
-
-
     this.angulo += noise(this.posy * 0.01, millis() * 0.001) * 10 - 0;
 
     this.dx = cos(radians(this.angulo));
@@ -125,11 +122,9 @@ class Trazo_f {
 
 
   dibujar() {
-    this.darcolor();
+    //this.darcolor();
     push();
-
     background(245, 0.5);
-
     translate(this.posx_f, this.posy);
 
     if (this.posx_f < width / 2) {
