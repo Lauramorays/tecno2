@@ -10,7 +10,7 @@ let imgs_trazosF = [];
 let mic;
 let AMP_MIN = 0.01;
 let AMP_MAX = 0.1; // Umbral de volumen para detectar sonidos fuertes
-let durationThreshold = 2; // Duración mínima del sonido en segundos
+let durationThreshold = 8; // Duración mínima del sonido en segundos
 let startTime = 0;
 let soundDetected = false;
 let sonidoMax= false;
