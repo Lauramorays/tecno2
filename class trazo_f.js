@@ -1,11 +1,14 @@
 class Trazo_f {
-  constructor(quetrazo) {
+  constructor(quetrazo, colorfondo) {
     // Resto del código...
     this.cual = int(random(imgs_trazos.length));
     this.posy_reset = random(height + 30, height + 80);
+    this.cualcolorf = int(random(colorfondo.length));
+    this.anchoVenta = windowWidth;
 
     // Asignar el array imgs_trazos a this.quetrazo
     this.quetrazo = imgs_trazos[this.cual];
+    this.colorfondo = colorfondo[this.cualcolorf];
 
     // Vars movimiento
     this.vel = random(5, 20);
@@ -31,7 +34,7 @@ class Trazo_f {
 
 
   getColorFromImage(x, y) {
-    let c = miImagenfondo.get(x, y);
+    let c = this.quetrazo.get(x, y);
     return c;
   }
 
@@ -50,14 +53,19 @@ class Trazo_f {
     }
   
     // Obtener un color al azar de la imagen en una posición específica
-    let x = floor(random(this.quetrazo.width));
+    /*let x = floor(random(this.quetrazo.width));
     let y = floor(random(this.quetrazo.height));
-    let colorPixel = this.quetrazo.get(x, y);
+    let colorPixel = this.quetrazo.get(x, y);*/
+
+    let x = floor(random(this.colorfondo.width));
+    let y = floor(random(this.colorfondo.height));
+    let colorPixel = this.colorfondo.get(x, y);
+  
   
     // Utilizar el color obtenido de la imagen
-    this.randomcol = colorPixel[0];
-    this.brillo = colorPixel[1];
-    this.opacidad = colorPixel[2];
+    this.rojo = colorPixel[0];
+    this.verde = colorPixel[1];
+    this.azul = colorPixel[2];
   }
 
   saltaralprincipio_f() {
@@ -83,7 +91,7 @@ class Trazo_f {
     } else if (this.posx_f > width / 2 - 75) {
 
       //this.angulo = map(this.posy, height, 0, 90, 120);
-      this.angulo = map(this.posx_f, width / 2 + 75, width, 90, 140);
+      this.angulo = map(this.posx_f, width / 2 + 80, width, 90, 140);
       this.espacioMedio = false;
     }
 
@@ -97,6 +105,9 @@ class Trazo_f {
     if (this.posx_f > width / 2 - 100 && this.posx_f < width / 2 + 100 && this.posy > height / 2) {
       this.angulo = map(this.posy, height, 0, 50, 120);
     }
+
+
+
 
     this.angulo += noise(this.posy * 0.01, millis() * 0.001) * 10 - 0;
 
@@ -122,44 +133,49 @@ class Trazo_f {
 
 
   dibujar() {
-    //this.darcolor();
+    this.darcolor();
+
     push();
-    background(245, 0.5);
+
+    //background(245, 1);
+
     translate(this.posx_f, this.posy);
 
     if (this.posx_f < width / 2) {
       let colorPixel = this.getColorFromImage(this.posx_f, this.posy);
       let trazoAngulo = radians(this.angulo);
-      let imgAngulo = trazoAngulo + atan2(this.dy, this.dx); // Ángulo de la imagen basado en el ángulo del trazo y su dirección
 
       // Mapear el valor de brillo al rango 0-1
-      let brilloMapeado = map(colorPixel[1], 0, 255, 5, 20);
+      let brilloMapeado = map(this.velmouse, 20, 900, 10, 60);
+      let opacidadMapeada = map(this.velmouse, 20, 900, 5, 40);
 
-      fill(colorPixel[0], colorPixel[1], colorPixel[2], brilloMapeado);
-      tint(colorPixel[0], colorPixel[1], colorPixel[2], brilloMapeado);
+      fill(this.rojo, this.verde, this.azul, brilloMapeado);
+      tint(this.rojo, this.verde, this.azul, brilloMapeado);
 
       push();
       translate(0, 0); // Ajusta la posición de dibujo de la imagen según tus necesidades
-      rotate(this.anguloRotacion);
-      image(this.quetrazo, 0, 0, random(30, 40), random (50, 100)); // Dibuja la imagen en la posición actual relativa a translate()
+      scale(-1, 1);
+      rotate(trazoAngulo);
+      image(this.quetrazo, 0, 0, random(70, 120), random(40, 70), opacidadMapeada); // Dibuja la imagen en la posición actual relativa a translate()
       pop();
 
       // Resto del código...
     } else {
       let colorPixel = this.getColorFromImage(this.posx_f, this.posy);
       let trazoAngulo = radians(this.angulo);
-      let imgAngulo = trazoAngulo + atan2(this.dy, this.dx); // Ángulo de la imagen basado en el ángulo del trazo y su dirección
 
       // Mapear el valor de brillo al rango 0-1
-      let brilloMapeado = map(colorPixel[1], 0, 255, 5, 20);
+      let brilloMapeado = map(this.velmouse, 20, 900, 10, 60);
+      let opacidadMapeada = map(this.velmouse, 20, 900, 5, 40);
 
-      fill(colorPixel[0], colorPixel[1], colorPixel[2], brilloMapeado);
-      tint(colorPixel[0], colorPixel[1], colorPixel[2], brilloMapeado);
+      fill(this.rojo, this.verde, this.azul, brilloMapeado);
+      tint(this.rojo, this.verde, this.azul, brilloMapeado);
 
       push();
       translate(0, 0); // Ajusta la posición de dibujo de la imagen según tus necesidades
-      rotate(this.anguloRotacion);
-      image(this.quetrazo, 0, 0, random(30, 40), random (50, 100)); // Dibuja la imagen en la posición actual relativa a translate()
+      //rotate(this.anguloRotacion);
+      rotate(trazoAngulo);
+      image(this.quetrazo, 0, 0, random(70, 120), random(40, 70), opacidadMapeada); // Dibuja la imagen en la posición actual relativa a translate()
       pop();
     }
 
@@ -172,4 +188,4 @@ class Trazo_f {
 
 
 
-}  
+} 
