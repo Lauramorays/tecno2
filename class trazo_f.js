@@ -146,8 +146,8 @@ class Trazo_f {
       let trazoAngulo = radians(this.angulo);
 
       // Mapear el valor de brillo al rango 0-1
-      let brilloMapeado = map(this.velmouse, 20, 900, 10, 60);
-      let opacidadMapeada = map(this.velmouse, 20, 900, 5, 40);
+      let brilloMapeado = map(this.velmouse, 20, 900, 10, 150);
+      let opacidadMapeada = map(this.velmouse, 20, 900, 5, 20);
 
       fill(this.rojo, this.verde, this.azul, brilloMapeado);
       tint(this.rojo, this.verde, this.azul, brilloMapeado);
@@ -165,8 +165,8 @@ class Trazo_f {
       let trazoAngulo = radians(this.angulo);
 
       // Mapear el valor de brillo al rango 0-1
-      let brilloMapeado = map(this.velmouse, 20, 900, 10, 60);
-      let opacidadMapeada = map(this.velmouse, 20, 900, 5, 40);
+      let brilloMapeado = map(this.velmouse, 20, 900, 10, 150);
+      let opacidadMapeada = map(this.velmouse, 20, 900, 5, 20);
 
       fill(this.rojo, this.verde, this.azul, brilloMapeado);
       tint(this.rojo, this.verde, this.azul, brilloMapeado);

@@ -13,6 +13,8 @@ let colorfondo = [];
 
 let colorfigura = [];
 
+let mascaras = [];
+
 function preload() {
   // Carga de la máscara figura
   //mascarafigura = loadImage('trazos/mascara_figura3.jpg');
@@ -62,11 +64,11 @@ function preload() {
   }
 
   let urlsFon = [
-    "imagenes/figura1.jpg",
-    "imagenes/figura2.jpg",
-    "imagenes/figura3.jpg",
-    "imagenes/figura4.jpg",
-    "imagenes/figura5.jpg",
+    "imagenes/fondo1.jpg",
+    "imagenes/fondo2.jpg",
+    "imagenes/fondo3.jpg",
+    "imagenes/fondo4.jpg",
+    "imagenes/fondo5.jpg",
   ];
 
     // imagenes para obtener el color del fondo
@@ -89,6 +91,21 @@ function preload() {
       coloresfigura.resize(windowWidth, windowHeight);
       colorfigura.push(coloresfigura);
     }
+
+    let urlsM = [
+      "trazos/mascara_figura1.jpg",
+      "trazos/mascara_figura2.jpg",
+      "trazos/mascara_figura3.jpg",
+      "trazos/mascara_figura4.jpg",
+      "trazos/mascara_figura5.jpg",
+    ]
+
+      // Carga de las imágenes de mascaras de figura
+      for (let i = 0; i < urlsM.length; i++) {
+        let mascarasF = loadImage(urlsM[i]);
+        mascarasF.resize(windowWidth, windowHeight);
+        mascaras.push(mascarasF);
+      }
     
 
   //let miImagenfondo;
@@ -98,6 +115,7 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+
 //imágenes para obtener el color de la figura y el fondo
  // miImagenfondo = loadImage('imagenes/colorfondo.jpg');
  // miImagentrazo = loadImage('imagenes/colorfigura.jpg');
@@ -114,10 +132,14 @@ function setup() {
 
   // Crear objetos trazo_fig después de cargar las imágenes de trazos figura
   for (let j = 0; j < 10; j++) {
-    let trazo_fi = new trazo_fig(mascarafigura, imgs_trazosF[j], colorfigura);
+    let trazo_fi = new trazo_fig(mascaras, imgs_trazosF[j], colorfigura);
     filter(BLUR);
     tfig.push(trazo_fi);
   }
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
 
 function draw() {

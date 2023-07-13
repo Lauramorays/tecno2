@@ -6,6 +6,8 @@ class trazo_fig {
     this.pgf = createGraphics(windowWidth, windowHeight);
     this.cual = int(random(imgs_trazosF.length));
     this.cualcolorfig = int(random(colorfigura.length));
+    this.cualmascara = int(random(mascaras.length));
+    this.mascarafigura = mascaras[this.cualmascara];
     this.trazo = imgs_trazosF[this.cual];
     this.colorfig = colorfig[this.cualcolorfig];
     this.mascaratrazo = loadImage('trazos/trazosfondo/trazofondo_03.png');
@@ -184,10 +186,7 @@ darColor(){
        this.pgf.tint(colorTrazo);
        fill(colorTrazo);
         rotate(radians(this.angulo_fig));
-        this.pgf.image(trazoEnmascarado, this.posX_fig, this.posY_fig, random (20, 50), random(60, 120));
-
-      //trazos circulos//
-      //this.pgf.image(this.trazo, this.posX_fig, this.posY_fig, this.tam_fig, this.tam_fig);
+        this.pgf.image(trazoEnmascarado, this.posX_fig, this.posY_fig, random (20, 50), random(30, 80));
 
       pop();
     }
