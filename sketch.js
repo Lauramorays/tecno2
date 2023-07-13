@@ -11,12 +11,12 @@ let mascaras = [];
 let mascaraActual; 
 //-------------------------------CONFIGURACION SONIDO---------------------
 let mic;
-let AMP_MIN = 0.01;
-let AMP_MAX = 0.0150; // Umbral de volumen para detectar sonidos fuertes
-let durationThreshold = 3; // Duración mínima del sonido en segundos
+let AMP_MIN = 0.02;
+let AMP_MAX = 0.100; // Umbral de volumen para detectar sonidos fuertes
+let durationThreshold = 5; // Duración mínima del sonido en segundos
 let startTime = 0;
-let sonidoMax= false;
-let sonidoMin= false;
+//let sonidoMax= false;
+//let sonidoMin= false;
 let estadoSonido = '';
 
 function preload() {
@@ -126,7 +126,7 @@ function setup() {
   }
 
   // Crear objetos trazo_fig después de cargar las imágenes de trazos figura
-  for (let j = 0; j < 120; j++) {
+  for (let j = 0; j < 130; j++) {
     let trazo_fi = new trazo_fig(mascaras, imgs_trazosF[j], colorfigura);
     filter(BLUR);
     tfig.push(trazo_fi);
