@@ -2,6 +2,7 @@ class trazo_fig {
   constructor(mascarafigura, trazo, colorfig) {
     this.mascarafigura = mascarafigura;
     //pgraphic//
+    
     this.pgf = createGraphics(windowWidth, windowHeight);
     this.cual = int(random(imgs_trazosF.length));
     this.cualcolorfig = int(random(colorfigura.length));
@@ -74,9 +75,12 @@ class trazo_fig {
   }
 
   getColorFromImage(x, y) {
-    let c = this.trazo.get(x, y);
-    return c;
+    let x_rel = floor(map(x, 0, width, 0, this.colorfig.width));
+    let y_rel = floor(map(y, 0, height, 0, this.colorfig.height));
+    let colorPixel = this.colorfig.get(x_rel, y_rel);
+    return colorPixel;
   }
+  
 
   //funciones 
 
@@ -127,7 +131,7 @@ class trazo_fig {
   saltaralprincipio() {
     this.posX_fig = random(this.margen_tfig, width - this.margen_tfig);
     this.posY_fig = random(this.margen_tfig, height - this.margen_tfig);
-    this.color_fig = color(random(50, 100), random(50, 100), random(50, 100), this.brilloFig);
+    this.color_fig = color(0, this.brilloFig);
     // variable para cambiar a una imagen aleatoria dentro del array de imgs//
     this.cual = int(random(this.trazo.length));
   }
@@ -177,8 +181,9 @@ darColor(){
         let colorTrazo = color(red(colorTint), green(colorTint), blue(colorTint), transparenciaAleatoria);
                 
        // this.pgf.tint(colorTrazo);
-       this.pgf.tint(this.rojo, this.verde, this.azul, transparenciaAleatoria);
-        rotate(radians(angulo) + random(0, 360));
+       this.pgf.tint(colorTrazo);
+       fill(colorTrazo);
+        rotate(radians(this.angulo_fig));
         this.pgf.image(trazoEnmascarado, this.posX_fig, this.posY_fig, random (20, 50), random(60, 120));
 
       //trazos circulos//

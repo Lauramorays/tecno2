@@ -76,18 +76,19 @@ function preload() {
     }
 
     let urlsFig = [
-      "imagenes/fondo1.jpg",
-      "imagenes/fondo2.jpg",
-      "imagenes/fondo3.jpg",
-      "imagenes/fondo4.jpg",
-      "imagenes/fondo5.jpg",
+      "imagenes/figura1.jpg",
+      "imagenes/figura2.jpg",
+      "imagenes/figura3.jpg",
+      "imagenes/figura4.jpg",
+      "imagenes/figura5.jpg",
     ];
   
-      // imagenes para obtener el color del fondo
-      for (let i = 0; i < urlsFig.length; i++) {
-        let coloresfigura = loadImage(urlsFig[i]);
-        colorfigura.push(coloresfigura);
-      }
+    // Carga de las imágenes de trazos figura en el array colorfigura
+    for (let i = 0; i < urlsFig.length; i++) {
+      let coloresfigura = loadImage(urlsFig[i]);
+      coloresfigura.resize(windowWidth, windowHeight);
+      colorfigura.push(coloresfigura);
+    }
     
 
   //let miImagenfondo;
